@@ -10,7 +10,7 @@ chai.use(chaiHttp);
 
 // Testin ne testi olduğunu yazıyoruz.
 describe('Node Server' , ()=>{
-    it('(GET /) anasayfayı döndürür' , (done)=>{ // -> unit testi yapmak için
+    it('(GET /) returns the homepage' , (done)=>{ // -> unit testi yapmak için
         chai.request(server)
             .get('/')
             .end((err,res)=>{
