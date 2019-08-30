@@ -1,3 +1,4 @@
+const mongoose = require('mongoose');
 const express = require('express');
 const router = express.Router();
 
@@ -57,6 +58,58 @@ router.get('/' , (req,res)=>{
   }).catch((err)=>{
     res.json(err);
   })
-})
+});
+
+
+router.get('/:director_id' , (req,res)=>{
+  const promise = Director.aggregate([
+    {
+      $match : {
+        '_id' : mongoose.Types.ObjectId(req.params.director_id)
+      }
+    },
+    {
+      $lookup : {
+        from : 'movies', // nere ile join edilecek
+        localField : '_id', // director tablosundan hangi alan ile eşleştirilecek
+        foreignField : 'director_id' , // movies tablosundan ne ile eşleşecek
+        as : 'movies' // donen datanın adı
+      }
+    },
+    {
+      $group : {
+        _id  :{
+          _id : '$_id',
+          name : '$name',
+          surname  : '$surname',
+          bio : '$bio'
+        },
+        movies : {
+          $push : '$movies'
+        }
+      }
+    },
+    {
+      $project : {
+        _id : '$_id._id',
+        name : '$_id.name',
+        surname : '$_id.surname',
+        movies : '$movies'
+      }
+    },
+    {
+      $unwind : {
+        path : '$movies',
+        preserveNullAndEmptyArrays : true
+      }
+    }
+  ]);
+  promise.then((data)=>{
+    res.json(data);
+  }).catch((err)=>{
+    res.json(err);
+  })
+});
+
 
 module.exports = router;
