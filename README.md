@@ -1,3 +1,4 @@
+[![Build Status](https://api.travis-ci.org/sametirkoren/movie-api.svg)](https://travis-ci.org/sametirkoren/movie-api)
 # Movies
  
 | Route | HTTP Verb | POST body | Description |
